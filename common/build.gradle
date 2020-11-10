@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion androidId.compileSdkVersion
+    buildToolsVersion androidId.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidId.minSdkVersion
+        targetSdkVersion androidId.targetSdkVersion
+        versionCode androidId.versionCode
+        versionName androidId.versionName
+        testInstrumentationRunner androidId.testInstrumentationRunner
+
+        consumerProguardFiles androidId.consumerProguardFiles
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation app_impl.publicImplementation
+    testImplementation app_impl.testImplementation
+    androidTestImplementation app_impl.androidTestImplementation
+
+    //每个模块都要用到router_api模块对外提供的加载数据接口(组、路径)
+    //app/order/personal都依赖与common公共基础库
+    api project(':router_api')//这些接口同样对所有业务子模块开放了
+}
